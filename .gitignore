@@ -1,0 +1,13 @@
+.DS_Store
+.ipynb_checkpoints
+.idea
+__pycache__
+*.egg-info
+dist/
+.vscode/
+build/
+.ipynb
+
+examples/
+cpp/
+build/
