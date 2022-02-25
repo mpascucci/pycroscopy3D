@@ -41,7 +41,7 @@ pycro.plot_flatten(s)
 
 
     
-![png](docs/examples/markdown/readme/Readme_files/Readme_5_0.png)
+![png](Readme_files/Readme_5_0.png)
     
 
 
@@ -78,6 +78,6 @@ pycro.orthogonal_views(mean_psf)
 
 
     
-![png](docs/examples/markdown/readme/Readme_files/Readme_8_0.png)
+![png](Readme_files/Readme_8_0.png)
     
 

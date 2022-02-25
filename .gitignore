@@ -8,6 +8,6 @@ dist/
 build/
 .ipynb
 
-examples/
+examples_local
 cpp/
 build/
