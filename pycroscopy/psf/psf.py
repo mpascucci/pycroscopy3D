@@ -19,11 +19,11 @@ def plot_zmaxproj(ndarray, **kwargs):
 
 
 class PSF:
-    def __init__(self, stack_path: str, gblur_std=1, th_min=0.2, value_tolerance=0, exp_size='auto', size_tolerance=0.9):
+    def __init__(self, stack, gblur_std=1, th_min=0.2, value_tolerance=0, exp_size='auto', size_tolerance=0.9):
         """Generate a mean psf image from a volumetric image of many point-size objects.
 
         Args:
-            stack_path (str): path to a 3D tiff stack (beads image)
+            stack_path (pycroscopy.Stack): a 3D stack (e.g. loaded with pycroscopy.load_stack)
             gblur_std (int, optional): gaussian blur std Defaults to 1.
             th_min (float, optional): relative threshold in [0,1] Defaults to 0.2.
             value_tolerance (int, optional): when cropping, consider voxels as neighbors
@@ -40,12 +40,12 @@ class PSF:
         Returns:
             Stack: a multipagetiff Stack containing the average PSF
         """
+        self.stack = stack
+
         # self._calc_done = False
         self._centroids = None
         self._PSFs = None
         self._mean_PSF = None
-
-        self.stack = mtif.read_stack(stack_path)
 
         # Gaussian Blur =============================
         log.info("Gaussian blur")
@@ -101,22 +101,19 @@ class PSF:
     def mean_PSF(self):
         if self._mean_PSF is None:
             self.calc_mean_psf()
-        else:
-            return self._mean_PSF
+        return self._mean_PSF
 
     @property
     def centroids(self):
         if self._centroids is None:
             self.calc_mean_psf()
-        else:
-            return self._centroids
+        return self._centroids
 
     @property
     def PSFs(self):
         if self._PSFs is None:
             self.calc_mean_psf()
-        else:
-            return self._PSFs
+        return self._PSFs
 
     def get_one_cropped_psf(self, index):
         slice = self.slices[index]
