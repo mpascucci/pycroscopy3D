@@ -25,15 +25,20 @@ def _preprocess_stack(stack, dtype='float32'):
     """Load 3D image as ndarray"""
     # read stack
     # set negative values to zero
-    stack._imgs = np.where(stack._imgs < 0, 0, stack._imgs)
+    imgs = stack.pages.copy()
+    imgs = np.where(imgs < 0, 0, imgs)
     # set datatype
-    stack.dtype_out = dtype
-    return stack
+    return imgs.astype(dtype)
 
 
-def deconvolve(img_stack, psf_stack, dtype="float32", psf_px_size=(1, 1, 1), img_px_size=(1, 1, 1), regularization=True):
+def deconvolve(img_stack, psf_stack, offset=0, gain=1, dtype="float32",
+               psf_px_size=(1, 1, 1), img_px_size=(1, 1, 1), regularization=True,
+               max_iter=None):
     psf = _preprocess_stack(psf_stack, dtype=dtype)
     img = _preprocess_stack(img_stack, dtype=dtype)
+
+    img = np.round((img-offset)/gain).astype(dtype)
+    img = np.where(img < 0, 0, img)
 
     # sizes in pixel
     nz, ny, nx = psf.shape
@@ -43,13 +48,18 @@ def deconvolve(img_stack, psf_stack, dtype="float32", psf_px_size=(1, 1, 1), img
     vz, vy, vx = img_px_size
 
     a = iocbio.PyDeconvolveFloat()
-    a.set_psf(psf.pages.ravel(), nz, ny, nx, px, py, pz)
+    a.set_psf(psf.ravel(), nz, ny, nx, px, py, pz)
 
     if not regularization:
         a.disable_regularization()
 
-    dec = np.array(a.deconvolve(img.pages.ravel(), mz,
+    if max_iter is not None:
+        a.set_max_iterations(max_iter)
+
+    dec = np.array(a.deconvolve(img.ravel(), mz,
                    my, mx, vz, vy, vx), dtype=dtype)
     dec = dec.reshape(*img.shape)
+
+    dec = np.where(dec < 0, 0, dec)*gain + offset
 
     return mtif.Stack(dec)

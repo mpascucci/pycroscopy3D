@@ -1,1 +1,1 @@
-from .deconvolution_core import deconvolve
+from .deconvolution import deconvolve
