@@ -41,7 +41,6 @@ def loss_poisson(gain, bins, bars, offset):
     re_bars = [np.sum(bars[temp == b]) for b in re_bins]
 
     fit = poisson.pmf(re_bins, m/gain)
-    fit = fit*np.diff(re_bins)[0]
 
     _loss = np.mean((fit-re_bars)**2)
 
@@ -78,15 +77,21 @@ def estimate_gain(noise_data, offset=100, distribution='gp', lims=(1, 6)):
     bins, bars = hist(norm_img)
 
     if distribution == 'gp':
-        loss = loss_gaussian_approx
-        gain = minimize(loss, args=(bins, bars, offset), x0=2,
-                        bounds=[lims], method='nelder-mead').x[0]
+        loss_f = loss_gaussian_approx
+        fit = minimize(loss_f, args=(bins, bars, offset), x0=2,
+                       bounds=[lims], method='nelder-mead')
+        gain = fit.x[0]
+        loss = fit.fun
     elif distribution == 'p':
-        lims = list(range(*lims))
-        gain = lims[np.argmin(
-            [loss_poisson(g, bins, bars, offset) for g in lims])]
+        loss_f = loss_poisson
+        lims = list(np.range(*lims).astype(int))
+        losses = [loss_f(g, bins, bars, offset) for g in lims]
+        gain = lims[np.argmin(losses)]
+        loss = losses[gain]
 
-    return gain
+    rmse = np.sqrt(loss)
+
+    return dict(gain=gain, rmse=rmse)
 
 
 def plot_gain_fit(noise_data, gain=1, offset=100):
