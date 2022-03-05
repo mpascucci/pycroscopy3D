@@ -1,4 +1,3 @@
-import subprocess
 __all__ = [
     "parse_time_from_stack_name",
     "extract_and_save_planes_from_one_stack",
@@ -7,12 +6,14 @@ __all__ = [
     "skew_correct_one"
 ]
 
+import subprocess
 import os
 import pycroscopy as pycro
 from tifffile import imwrite, imread
 from glob import glob
 import numpy as np
 from tqdm import tqdm
+import multipagetiff as mtif
 
 
 def parse_time_from_stack_name(path, zfill=6):
@@ -85,9 +86,9 @@ def skew_correct_one(in_path, out_path, stack_fname, info_fname):
     return 0
 
 
-def skew_correct(in_path, out_path, info_fname):
+def skew_correct_matlab(in_path, out_path, info_fname):
     """Correct the SCAPE 3D images in one folder.
-    
+
     Apply the skew correction via a matlab script.
 
     in_path: the folder containing the 3D images and the info_file
@@ -108,3 +109,29 @@ def skew_correct(in_path, out_path, info_fname):
         raise RuntimeError(err.decode())
 
     return 0
+
+
+def skew_correct_python(stack, skew_angle_deg, scale):
+    """Apply skew correction to a SCAPE uncorrected image.
+
+    Args:
+        stack (mtif.Stack): the uncorrected scape image stack
+        skew_angle_deg (int): skew angle in degrees
+        scale (tuple): The pixel ratio between the uncorrected and the corrected images
+
+    Returns:
+        Stack: The corrected image
+    """
+    skew_angle_rad = skew_angle_deg/180*np.pi
+    m = np.eye(3)
+    m[[0, 1, 2], [0, 1, 2]] = scale
+    m[2, 0] = 1/np.tan(skew_angle_rad)
+
+    temp = stack.pages.copy()
+    temp = np.flip(temp, 1)
+    temp = np.flip(temp, 2)
+    temp = np.transpose(temp, [2, 1, 0])
+    temp = np.flip(temp, 0)
+    stack = mtif.Stack(temp)
+
+    return mtif.affine_transform(stack, m)
