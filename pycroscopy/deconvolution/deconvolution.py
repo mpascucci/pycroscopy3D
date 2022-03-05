@@ -1,4 +1,3 @@
-from ast import Import
 import multipagetiff as mtif
 import numpy as np
 
@@ -12,13 +11,13 @@ except ModuleNotFoundError as e:
         "The iocbio deconvolve python wrapper was not found.\n"\
         "Probably, you need to add its path to the PYTHONPATH environment variable\n" \
         'e.g. export PYTHONPATH=<deconvolve_path>/python/calc'
-    raise ImportError(msg)
+    log.warn(ImportError(msg))
 except ImportError as e:
     msg = f"{e.msg}\n\n" \
         "IOCBIO 'deconvolve' C++ compiled library could not be found.\n"\
         "Probably, you need to add its path to the LD_LIBRARY_PATH environment library.\n"\
         'e.g. export LD_LIBRARY_PATH=<deconvolve_path>/cpp'
-    raise ImportError(msg)
+    log.warn(ImportError(msg))
 
 
 def _preprocess_stack(stack, dtype='float32'):
