@@ -2,6 +2,7 @@ import multipagetiff as mtif
 import numpy as np
 import pandas as pd
 from tifffile import imwrite
+from tqdm import tqdm
 import os
 
 
@@ -11,11 +12,12 @@ def get_ordered_tiffs(dataPath):
     load list of tiff ordered by time step.
 
     """
-
+    
     paths = os.listdir(dataPath)
-    timings = [int(i.split('_')[-1].split('.')[0][1:]) for i in paths]
+    paths = [i for i in paths if (i.endswith('.tif') or i.endswith('.tiff'))]
+    timings = [int(i.split('.')[0].split('_')[-1][1:]) for i in paths]
     rearranged_paths = np.array(paths)[np.argsort(timings)]
-    output = [dataPath + i for i in rearranged_paths]
+    output = [os.path.join(dataPath, i) for i in rearranged_paths]
     return output
 
 
@@ -61,6 +63,46 @@ def create_save_path(savePath, run):
     return savePath + run
 
 
+def identity(x):
+    return x
+
+
+def convert_to_4D_stacks(paths, path_out, mean_stack_path=None, chunk_size=None):
+    """Stack Volumes into 4D stacks of size chunk_size.
+    
+    if mean_stack_path (str) is specified, save the mean stack at specified location"""
+    
+    
+    if chunk_size is None:
+      chunk_size = len(paths)
+      
+    stack_sum = np.zeros(mtif.read_stack(paths[0]).shape, dtype=np.float64)
+      
+    for i in tqdm(range(0,len(paths), chunk_size), desc=f"Build 4d stack(chunksize={chunk_size})"):
+        paths_batch = paths[i:i+chunk_size]
+        volumes = mtif.load_and_apply_batch(paths_batch, identity)
+        output = np.array(volumes)
+        
+        stack_sum += np.array(output).sum(axis=0)
+        
+        # SAVE AS NPY
+        # fname = os.path.join(path_out, 
+        #                       'hyperstack_{}_to_{}'.format(str(i).zfill(5),
+        #                                                       str(i+chunk_size-1).zfill(5)))
+        # np.save(fname, output)
+        
+        # SAVE AS TIFF
+        save_4d_tiff(path_out, 
+                      output, 
+                      default_name='hyperstack_{}_to_{}.tif'.format(str(i).zfill(5),
+                                                                  str(i+len(paths_batch)-1).zfill(5)))
+    
+    if mean_stack_path is not None:
+        mean_img = (stack_sum/len(paths)).astype(np.uint16)
+        mtif.write_stack(mtif.Stack(mean_img), mean_stack_path)
+    
+    
+
 def build_4D_tiff(dataPath, frame_lim=None, plane_lim=None):
     """
     Build a 4D stack from separate 3D tiff files.
@@ -84,7 +126,7 @@ def build_4D_tiff(dataPath, frame_lim=None, plane_lim=None):
 
     """
     # Get ordered list of tiff files in data folder that we need to load
-    if not frame_lim:
+    if frame_lim is None:
         to_load = get_ordered_tiffs(dataPath)
     else:
         to_load = get_ordered_tiffs(dataPath)[frame_lim[0]:frame_lim[1]]
@@ -98,7 +140,7 @@ def build_4D_tiff(dataPath, frame_lim=None, plane_lim=None):
     return hyperstack
 
 
-def save_4d_tiff(savePath, run, hyperstack, default_name='/hyperstack_4D.tiff'):
+def save_4d_tiff(savePath, hyperstack, default_name='hyperstack_4D.tiff'):
     """Save a stack as tiff file with a default name.
     
     Used to save 4D staks.
@@ -111,13 +153,9 @@ def save_4d_tiff(savePath, run, hyperstack, default_name='/hyperstack_4D.tiff'):
     None.
 
     """
-    
-    # build output folder & save hyperstack
-    savePath = create_save_path(savePath, run)
+
     fname = os.path.join(savePath, default_name)
-    # imwrite(fname, to_save)
     imwrite(fname, hyperstack)
-    print('Saved hyperstack as:\n' + fname)
 
 
 def properNamePlane(i, nPlanes):
@@ -196,7 +234,9 @@ def create_single_plane_tiff(plane_id, to_load, y_lim, ref_stack, crop=True):
     else: # get entire FOV
         x_lim = (0, ref_stack.shape[1])
     df_crop = pd.DataFrame({'x_lim': x_lim,
-                            'y_lim': y_lim})  # store info to save it
+                            'y_lim': y_lim,
+                            'plane_id': [plane_id]*2,
+                            'status': ['inf', 'sup']})  # store info to save it
 
     # Load cropped stack of each time steps
     stacks = mtif.load_and_apply_batch(to_load, get_plane_image, 
@@ -246,19 +286,22 @@ def create_planes_tiff(dataPath, run, savePath, plane_lim=None, step_plane=5, cr
 
     # Loads tiff files
 
-    if not plane_lim:
+    if plane_lim is None:
         start, end = 0, nPlanes
     else:
         start, end = plane_lim[0], nPlanes-2
+    
+    df_crop_all = {}
 
     for plane_id in range(start, end, step_plane):
         stack, df_crop = create_single_plane_tiff(plane_id, to_load, y_lim, ref_stack, crop)
-        planeName = str(plane_id).zfill(len(nPlanes))
-        savePath = create_save_path(savePath, run + '/plane_' + planeName)
-        fname = os.path.join(savePath, '/plane_' + planeName + '.tiff')
+        planeName = str(plane_id).zfill(len(str(nPlanes)))
+        # savePath = create_save_path(savePath, run + '/plane_' + planeName)
+        fname = os.path.join(savePath, 'plane_' + planeName + '.tiff')
         imwrite(fname, stack)
         print('Saved hyperstack as:\n' + fname)
-        df_crop.to_csv(savePath + '/limits_crop.csv')
+        df_crop_all[plane_id] = df_crop
+    pd.concat(df_crop_all).to_csv(savePath + '/limits_crop.csv')
 
 
 def get_unpad_planes(stack):

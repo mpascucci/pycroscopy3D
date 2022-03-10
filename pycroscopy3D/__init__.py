@@ -8,4 +8,5 @@ from multipagetiff.stack import Stack
 
 from . import transformation
 from . import skew_correction
+from . import registration
 from .deconvolution import *

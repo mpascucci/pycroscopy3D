@@ -19,7 +19,7 @@ setuptools.setup(name='Pycroscopy3D',
                  packages=setuptools.find_packages(),
                  include_package_data=True,
                  install_requires=['multipagetiff',
-                                   'numpy', 'matplotlib', 'tqdm', 'connected-components-3d'],
+                                   'numpy', 'matplotlib', 'tqdm', 'connected-components-3d', 'ants'],
                  classifiers=[
                      "Programming Language :: Python",
                      "License :: OSI Approved :: GNU General Public License v2 (GPLv2)",
