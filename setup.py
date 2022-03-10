@@ -2,12 +2,14 @@ import setuptools
 
 VERSION_MAJOR = 0
 VERSION_MINOR = 1
+VERSION_MICRO = 1
 
 with open("README.txt", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(name='Pycroscopy',
-                 version='{}.{}'.format(VERSION_MAJOR, VERSION_MINOR),
+                 version='{}.{}.{}'.format(
+                     VERSION_MAJOR, VERSION_MINOR, VERSION_MICRO),
                  description='Python tools for microscopy',
                  author='Marco Pascucci',
                  long_description=long_description,
