@@ -8,7 +8,7 @@ __all__ = [
 
 import subprocess
 import os
-import pycroscopy as pycro
+import pycroscopy3D as pycro
 from tifffile import imwrite, imread
 from glob import glob
 import numpy as np

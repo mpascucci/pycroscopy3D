@@ -15,7 +15,7 @@ Pycroscopy is a collection of tools for microscopy.
 
 
 ```python
-import pycroscopy as pycro
+import pycroscopy3D as pycro
 ```
 
 

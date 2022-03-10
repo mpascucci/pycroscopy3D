@@ -1,4 +1,5 @@
-import pycroscopy as pycro
+# %%
+import pycroscopy3D as pycro
 import os
 from glob import glob
 from tqdm import tqdm

@@ -7,7 +7,7 @@ VERSION_MICRO = 1
 with open("README.txt", "r") as fh:
     long_description = fh.read()
 
-setuptools.setup(name='Pycroscopy',
+setuptools.setup(name='Pycroscopy3D',
                  version='{}.{}.{}'.format(
                      VERSION_MAJOR, VERSION_MINOR, VERSION_MICRO),
                  description='Python tools for microscopy',
