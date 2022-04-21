@@ -7,6 +7,7 @@ dist/
 .vscode/
 build/
 .ipynb
+_pycroscopy/
 
 examples_local
 cpp/
