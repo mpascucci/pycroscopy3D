@@ -13,7 +13,7 @@ from ..deconvolution import deconvolve
    
 def main(*args, **kwargs):
     parser = argparse.ArgumentParser(description="Deconvolve one stack.\
-        Example: pycro_deconvolve --p mean_psf.tiff -g 3 -o test -i 20 image.tiff")
+        Example: pycro_deconvolve --p mean_psf.tiff -g 2.6 -o test -i 20 image.tiff")
     parser.add_argument("input_path", help="The path of the volume to register", type=str)
     parser.add_argument('-p', "--psf_path", help="The path of the PSF", type=str, required=True)
     parser.add_argument('-g', "--gain", help="Acquisition gain", type=float, required=True)

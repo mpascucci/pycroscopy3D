@@ -12,13 +12,14 @@ except ModuleNotFoundError as e:
         "Probably, you need to add its path to the PYTHONPATH environment variable\n" \
         'e.g. export PYTHONPATH=<deconvolve_path>/python/calc'
     log.warn(ImportError(msg))
+    raise
 except ImportError as e:
     msg = f"{e.msg}\n\n" \
         "IOCBIO 'deconvolve' C++ compiled library could not be found.\n"\
         "Probably, you need to add its path to the LD_LIBRARY_PATH environment library.\n"\
         'e.g. export LD_LIBRARY_PATH=<deconvolve_path>/cpp'
     log.warn(ImportError(msg))
-
+    raise
 
 def _preprocess_stack(stack, dtype='float32'):
     """Load 3D image as ndarray"""
