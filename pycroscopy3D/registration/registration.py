@@ -42,12 +42,38 @@ def stack_average(paths, chunk_size=None):
 
     return stack_mean
 
-def load_for_ants(img_path):
+def load_stack_for_ants(img_path):
     """Load an ANTs image with the right axis order"""
     stack = mtif.read_stack(img_path)
     return ants.from_numpy(stack.pages.astype(float))
 
-def register_with_ANTs(paths, template_path, out_folder, type_of_transform="Rigid", **kwargs):
+
+def register_with_ANTs(to_register, template, mask=None, type_of_transform="SyN", **kwargs):
+    """Register stack against template using ANTs.
+    
+    Args:
+        to_register (ndarray) : data to register against the template
+        template (ndarray) : template data
+        mask (ndarray) : registration mask
+        type_of_transform: this parameter is passed directly to ants.registration
+        **kwargs: passed directly to ants.registration
+    
+    Returns:
+        numpy.ndarray: registered stack
+    """
+    to_register = ants.from_numpy(to_register.astype(float))
+    template = ants.from_numpy(template.astype(float))
+    if mask is not None:
+        mask = ants.from_numpy(mask.astype(float))
+
+    areg = ants.registration(fixed=template, moving=to_register,
+        type_of_transform=type_of_transform,
+        mask=mask, **kwargs)
+
+    return areg['warpedmovout'].numpy()
+    
+
+def register_with_ANTs_batch(paths, template_path, out_folder, mask_path=None, type_of_transform="SyN", **kwargs):
     """Register images against a template using ANTs.
     
     Args:
@@ -56,15 +82,17 @@ def register_with_ANTs(paths, template_path, out_folder, type_of_transform="Rigi
         type_of_transform: this parameter is passed directly to ants.registration
         **kwargs: passed directly to ants.registration
     """
-    template = load_for_ants(template_path)
+    template = mtif.read_stack(template_path).pages
+    if mask is not None:
+        mask =  mtif.read_stack(mask_path).pages
 
     for path in tqdm(paths):
         out_path = os.path.join(out_folder, os.path.basename(path))
-        to_register = load_for_ants(path)
+        to_register = mtif.read_stack(path).pages
     
-        areg = ants.registration(fixed=template, moving=to_register, 
+        corrected = register_with_ANTs(to_register=to_register, template=template, mask=mask,
                                   type_of_transform=type_of_transform, **kwargs)
-        corrected = areg['warpedmovout'].numpy()
+
         stack = mtif.Stack(corrected)
         stack.dtype_out = np.uint16
         # stack.normalize = True

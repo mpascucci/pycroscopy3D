@@ -1,1 +1,1 @@
-from .registration import register_with_ANTs
+from .registration import register_with_ANTs, register_with_ANTs_batch

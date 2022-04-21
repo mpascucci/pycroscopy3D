@@ -2,7 +2,7 @@ import setuptools
 
 VERSION_MAJOR = 0
 VERSION_MINOR = 1
-VERSION_MICRO = 1
+VERSION_MICRO = 2
 
 with open("README.txt", "r") as fh:
     long_description = fh.read()
@@ -20,6 +20,10 @@ setuptools.setup(name='Pycroscopy3D',
                  include_package_data=True,
                  install_requires=['multipagetiff',
                                    'numpy', 'matplotlib', 'tqdm', 'connected-components-3d', 'ants'],
+                 entry_points={'console_scripts': [
+                     'pycro_register=pycroscopy3D.cli.registration:main',
+                     'pycro_deconvolve=pycroscopy3D.cli.deconvolution:main']
+                     },
                  classifiers=[
                      "Programming Language :: Python",
                      "License :: OSI Approved :: GNU General Public License v2 (GPLv2)",
