@@ -19,6 +19,7 @@ def main(*args, **kwargs):
     parser.add_argument('-g', "--gain", help="Acquisition gain", type=float, required=True)
     parser.add_argument('-f', "--offset", help="Image offset level (defaults to 100)", type=int, default=100)
     parser.add_argument('-d', "--dtype", help="Output data dype (default uint16)", type=str, default='uint16')
+    parser.add_argument('-u', "--unpad", help="Auto-unpad image", type=bool, default=False)
     parser.add_argument('-i', "--max_iterations", help="Maximum iteration number (default 10)", type=int, default=2)
     parser.add_argument('-o', "--output_folder", help="The folder where the output file will be saved", type=str, required=True)
     args = parser.parse_args()
@@ -27,6 +28,9 @@ def main(*args, **kwargs):
 
     psf = mtif.read_stack(args.psf_path)
     img = mtif.read_stack(args.input_path)
+
+    if args.unpad:
+        mtif.unpad_stack(img)
        
     deconvolved = deconvolve(img_stack=img, psf_stack=psf, offset=args.offset, gain=args.gain, max_iter=args.max_iterations)
     deconvolved.dtype_out = np.dtype(args.dtype)
