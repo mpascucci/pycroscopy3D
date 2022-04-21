@@ -67,7 +67,7 @@ def register_with_ANTs(paths, template_path, out_folder, type_of_transform="Rigi
         corrected = areg['warpedmovout'].numpy()
         stack = mtif.Stack(corrected)
         stack.dtype_out = np.uint16
-        stack._apply_normalization()
+        # stack.normalize = True
         mtif.write_stack(stack, out_path)
 
 
