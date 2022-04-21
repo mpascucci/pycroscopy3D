@@ -4,6 +4,11 @@ import pandas as pd
 from tifffile import imwrite
 from tqdm import tqdm
 import os
+import psutil
+from multiprocessing import cpu_count
+
+import logging
+log = logging.getLogger(__name__)
 
 
 def get_ordered_tiffs(dataPath):
@@ -67,11 +72,45 @@ def identity(x):
     return x
 
 
-def convert_to_4D_stacks(paths, path_out, mean_stack_path=None, chunk_size=None):
-    """Stack Volumes into 4D stacks of size chunk_size.
+def get_number_of_array_fitting_ram(numpy_array):
+    """Calculate the maximum number of arrays that fit in the available RAM."""
+    available_ram = psutil.virtual_memory().available
+    size_of_obj = numpy_array.size * numpy_array.itemsize
+    return available_ram//size_of_obj
+
+def calc_stacks_average(paths, chunk_size=None):
+    """Calculate the average of the images in paths.
     
-    if mean_stack_path (str) is specified, save the mean stack at specified location"""
+    Returns:
+    multipagetiff.Stack
+    """
+
+    if chunk_size is None:
+        # chunk size equals CPUs number
+        try:
+            # array = mtif.read_stack(paths[0]).pages
+            # chunk_size = min(len(paths), get_number_of_array_fitting_ram(array))
+            chunk_size = cpu_count()
+        except:
+            raise
+
+    try:
+        stack_sum = np.zeros(mtif.read_stack(paths[0]).shape, dtype=np.float64)
+    except:
+        raise
+
+    for i in tqdm(range(0,len(paths), chunk_size), desc=f"Average stacks (chunksize={chunk_size})"):
+        paths_batch = paths[i:i+chunk_size]
+        volumes = mtif.load_and_apply_batch(paths_batch, identity)
+        output = np.array(volumes)
+        
+        stack_sum += np.array(output).sum(axis=0)
     
+    mean_img = (stack_sum/len(paths)).astype(np.uint16)
+    return mtif.Stack(mean_img)
+
+def convert_to_4D_stacks(paths, path_out, mean_stack_path=None):
+    """Stack Volumes into 4D stacks of size chunk_size."""
     
     if chunk_size is None:
       chunk_size = len(paths)
@@ -92,10 +131,11 @@ def convert_to_4D_stacks(paths, path_out, mean_stack_path=None, chunk_size=None)
         # np.save(fname, output)
         
         # SAVE AS TIFF
+
         save_4d_tiff(path_out, 
-                      output, 
-                      default_name='hyperstack_{}_to_{}.tif'.format(str(i).zfill(5),
-                                                                  str(i+len(paths_batch)-1).zfill(5)))
+                    output, 
+                    default_name='hyperstack_{}_to_{}.tif'.format(str(i).zfill(5),
+                                                                str(i+len(paths_batch)-1).zfill(5)))
     
     if mean_stack_path is not None:
         mean_img = (stack_sum/len(paths)).astype(np.uint16)
@@ -242,8 +282,8 @@ def create_single_plane_tiff(plane_id, to_load, y_lim, ref_stack, crop=True):
     stacks = mtif.load_and_apply_batch(to_load, get_plane_image, 
                                        plane_id=plane_id, x_lim=x_lim, y_lim=y_lim)
 
-    # Build hyperstack and normalise all pixels values
-    hyperstack = normalize(np.stack(stacks, axis=0))
+    # Build hyperstack
+    hyperstack = np.stack(stacks, axis=0).astype(np.uint16)
     del stacks
 
     #  Save limits of FOV used
@@ -298,7 +338,7 @@ def create_planes_tiff(dataPath, run, savePath, plane_lim=None, step_plane=5, cr
         planeName = str(plane_id).zfill(len(str(nPlanes)))
         # savePath = create_save_path(savePath, run + '/plane_' + planeName)
         fname = os.path.join(savePath, 'plane_' + planeName + '.tiff')
-        imwrite(fname, stack)
+        imwrite(fname, stack, dtype=np.uint16)
         print('Saved hyperstack as:\n' + fname)
         df_crop_all[plane_id] = df_crop
     pd.concat(df_crop_all).to_csv(savePath + '/limits_crop.csv')
