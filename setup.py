@@ -19,7 +19,7 @@ setuptools.setup(name='Pycroscopy3D',
                  packages=setuptools.find_packages(),
                  include_package_data=True,
                  install_requires=['multipagetiff',
-                                   'numpy', 'matplotlib', 'tqdm', 'connected-components-3d', 'ants'],
+                                   'numpy', 'matplotlib', 'tqdm', 'connected-components-3d', 'antspyx'],
                  entry_points={'console_scripts': [
                      'pycro_register=pycroscopy3D.cli.registration:main',
                      'pycro_deconvolve=pycroscopy3D.cli.deconvolution:main']
