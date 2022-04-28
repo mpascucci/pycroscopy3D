@@ -89,7 +89,7 @@ def calc_stacks_average(paths, chunk_size=None):
         # chunk size equals CPUs number
         try:
             # array = mtif.read_stack(paths[0]).pages
-            # chunk_size = min(len(paths), get_number_of_array_fitting_ram(array))
+            # chunk_size = min(len(paths), get_number_of_array_fitting_ram(paths))
             chunk_size = cpu_count()
         except:
             raise
