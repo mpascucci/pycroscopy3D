@@ -16,6 +16,7 @@ def main(*args, **kwargs):
     parser.add_argument("-s", "--stack_paths", help="The paths to the stacks to average", nargs='*', required=True)
     parser.add_argument('-o', "--output_path", help="The output filename", type=str, required=True)
     parser.add_argument('-d', "--dtype", help="Output data dype (default uint16)", type=str, default='uint16')
+    parser.add_argument('-n', "--divisor", help="Divide the sum by this number (for average calculation)", type=float, default=1)
     parser.add_argument('-q', "--quiet", help="Reduce verbosity", type=bool, default=False)
 
     args = parser.parse_args()
@@ -30,7 +31,7 @@ def main(*args, **kwargs):
     s = np.empty_like(mtif.read_stack(args.stack_paths[0]).pages)
 
     for path in args.stack_paths:
-        s += mtif.read_stack(path).pages
+        s += mtif.read_stack(path).pages/args.divisor
 
     s = mtif.Stack(s)    
     s.dtype_out = args.dtype
