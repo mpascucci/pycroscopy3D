@@ -28,7 +28,7 @@ def main(*args, **kwargs):
     if not args.quiet:
         mtif.log.setLevel(logging.INFO)
 
-    s = np.empty_like(mtif.read_stack(args.stack_paths[0]).pages)
+    s = np.empty_like(mtif.read_stack(args.stack_paths[0]).pages, dtype=float)
 
     for path in args.stack_paths:
         s += mtif.read_stack(path).pages/args.divisor
