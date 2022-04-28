@@ -20,10 +20,14 @@ def main(*args, **kwargs):
     parser.add_argument('-o', "--output_folder", help="The folder where the output file will be saved", type=str, required=True)
     parser.add_argument("-r", "--regitration_type", help="The ANTs registration type. Defaults to SyN.", type=str, default="SyN")
     parser.add_argument('-d', "--dtype", help="Output data dype (default uint16)", type=str, default='uint16')
+    parser.add_argument('-q', "--quiet", help="Reduce verbosity", type=bool, default=False)
 
     args = parser.parse_args()
 
     utils.create_folders(args.output_folder, log)
+    
+    if not args.quiet:
+        mtif.log.setLevel(logging.INFO)
 
     template = mtif.read_stack(args.template_path).pages
     to_register = mtif.read_stack(args.input_path).pages
