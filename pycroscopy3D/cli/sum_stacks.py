@@ -23,16 +23,25 @@ def main(*args, **kwargs):
 
     out_dir = os.path.dirname(args.output_path)
     if out_dir != '':
+        # create output dir
         utils.create_folders(out_dir, log)
     
     if not args.quiet:
+        # change verbosity
         mtif.log.setLevel(logging.INFO)
 
+    # create an empty stack to hold the mean
     s = np.empty_like(mtif.read_stack(args.stack_paths[0]).pages, dtype=float)
 
     for path in args.stack_paths:
-        s += mtif.read_stack(path).pages/args.divisor
+        # sum the files
+        s += mtif.read_stack(path).pages
 
+    # Divide by the amount specified as divisor parameter.
+    # (useful for mean calculation)
+    s /= args.divisor
+
+    # write the sum
     s = mtif.Stack(s)    
     s.dtype_out = args.dtype
     mtif.write_stack(s, args.output_path)
