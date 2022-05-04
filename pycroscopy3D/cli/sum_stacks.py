@@ -22,7 +22,7 @@ def main(*args, **kwargs):
 
     if not args.quiet:
         # change verbosity
-        mtif.log.setLevel(logging.INFO)
+        mtif.stack.log.setLevel(logging.INFO)
         log.setLevel(logging.INFO)
 
     log.info(f"Start sum calculation on {len(args.stack_paths)} files.")
