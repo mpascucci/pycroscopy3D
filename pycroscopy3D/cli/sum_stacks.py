@@ -8,6 +8,7 @@ from glob import glob
 from . import utils
 
 log = logging.getLogger(__name__)
+log.setLevel(logging.DEBUG)
 
 from ..registration import register_with_ANTs
   
@@ -29,17 +30,20 @@ def main(*args, **kwargs):
     if not args.quiet:
         # change verbosity
         mtif.log.setLevel(logging.INFO)
+        log.setLevel(logging.INFO)
 
     # create an empty stack to hold the mean
     s = np.empty_like(mtif.read_stack(args.stack_paths[0]).pages, dtype=float)
 
     for path in args.stack_paths:
         # sum the files
-        s += mtif.read_stack(path).pages
-
+        s += mtif.read_stack(path).pages.astype(float)
+    
     # Divide by the amount specified as divisor parameter.
     # (useful for mean calculation)
     s /= args.divisor
+
+    log.debug(f"mean {s.mean()}, min {s.min()}, max {s.max()}")
 
     # write the sum
     s = mtif.Stack(s)    
