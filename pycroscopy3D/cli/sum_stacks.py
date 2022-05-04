@@ -22,6 +22,9 @@ def main(*args, **kwargs):
 
     args = parser.parse_args()
 
+    log.debug(f"Start sum calculation on {len(args.stack_paths)} files.")
+    log.debug(f"divisor: {args.divisor}")
+
     out_dir = os.path.dirname(args.output_path)
     if out_dir != '':
         # create output dir
@@ -43,6 +46,7 @@ def main(*args, **kwargs):
     # (useful for mean calculation)
     s /= args.divisor
 
+    log.debug("sum done.")
     log.debug(f"mean {s.mean()}, min {s.min()}, max {s.max()}")
 
     # write the sum
