@@ -25,6 +25,8 @@ def main(*args, **kwargs):
 
     args = parser.parse_args()
 
+    log.info(f"Starting registration of: {args.input_path}")
+
     if not args.quiet:
         log.setLevel(logging.INFO)
         mtif.log.setLevel(logging.INFO)
