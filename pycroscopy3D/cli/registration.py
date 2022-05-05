@@ -25,15 +25,15 @@ def main(*args, **kwargs):
 
     args = parser.parse_args()
 
-    log.info(f"Starting registration of: {args.input_path}")
-
     if not args.quiet:
+        # change verbosity
+        mtif.stack.log.setLevel(logging.INFO)
         log.setLevel(logging.INFO)
-        mtif.log.setLevel(logging.INFO)
+
+    log.info(f"Starting registration of: {args.input_path}")
+    log.info(f"Working directory: {os.getcwd()}")
 
     utils.create_folders(args.output_folder, log)
-
-    log.info(f"Working directory: {os.getcwd()}")
 
     template = mtif.read_stack(args.template_path).pages
     to_register = mtif.read_stack(args.input_path).pages

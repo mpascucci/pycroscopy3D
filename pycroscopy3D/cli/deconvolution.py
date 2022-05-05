@@ -26,6 +26,13 @@ def main(*args, **kwargs):
     parser.add_argument('-o', "--output_folder", help="The folder where the output file will be saved", type=str, required=True)
     args = parser.parse_args()
 
+    if not args.quiet:
+        # change verbosity
+        mtif.stack.log.setLevel(logging.INFO)
+        log.setLevel(logging.INFO)
+
+    log.info(f"Starting deconvolution of: {args.input_path}")
+
     utils.create_folders(args.output_folder, log)
 
     psf = mtif.read_stack(args.psf_path)
