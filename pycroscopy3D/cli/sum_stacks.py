@@ -29,9 +29,9 @@ def main(*args, **kwargs):
     log.info(f"divisor: {args.divisor}")
 
     out_dir = os.path.dirname(args.output_path)
-    if out_dir != '':
-        # create output dir
-        utils.create_folders(out_dir, log)
+
+    # create output dir
+    utils.create_folders(out_dir, log)
     
     # create an empty stack to hold the mean
     s = np.empty_like(mtif.read_stack(args.stack_paths[0]).pages, dtype=float)

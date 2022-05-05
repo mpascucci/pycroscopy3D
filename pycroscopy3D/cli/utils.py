@@ -1,16 +1,9 @@
 import os
+import logging
 
-_verbose = False
-
-def  log(s):
-    global _verbose
-    if _verbose:
-        print(s)
-
-def create_folders(path, verbose=True):
-    global _verbose
-    _verbose = verbose
+def create_folders(path, logger=None):
     # create output folder if it does not exist
-    if not os.path.isdir(path):
-        log(f'directory "{path}" does not exist and will be created.')
+    if (path != '') and (not os.path.isdir(path)):
+        if isinstance(logger, logging.Logger):
+            logger.info(f'directory "{path}" does not exist and will be created.')
         os.makedirs(path, exist_ok=True)

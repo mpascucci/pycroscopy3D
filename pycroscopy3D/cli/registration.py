@@ -6,8 +6,9 @@ import os
 import numpy
 from . import utils
 
-
+logging.basicConfig(level=logging.DEBUG)
 log = logging.getLogger(__name__)
+log.setLevel(logging.WARNING)
 
 from ..registration import register_with_ANTs
   
@@ -24,10 +25,13 @@ def main(*args, **kwargs):
 
     args = parser.parse_args()
 
-    utils.create_folders(args.output_folder, log)
-    
     if not args.quiet:
+        log.setLevel(logging.INFO)
         mtif.log.setLevel(logging.INFO)
+
+    utils.create_folders(args.output_folder, log)
+
+    log.info(f"Working directory: {os.getcwd()}")
 
     template = mtif.read_stack(args.template_path).pages
     to_register = mtif.read_stack(args.input_path).pages

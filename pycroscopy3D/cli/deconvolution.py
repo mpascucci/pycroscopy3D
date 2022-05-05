@@ -5,7 +5,9 @@ import os
 from . import utils
 import numpy as np
 
+logging.basicConfig(level=logging.DEBUG)
 log = logging.getLogger(__name__)
+log.setLevel(logging.WARNING)
 
 from ..deconvolution import deconvolve
 
