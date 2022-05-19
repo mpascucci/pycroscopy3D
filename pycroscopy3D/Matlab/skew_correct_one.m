@@ -19,8 +19,8 @@ function skew_correct_one(TiffFolder, SaveFolder, RunName, InfoFile)
     end
     %On 
     
-    load(strcat(TiffFolder,'/', InfoFile));
-    
+    % load(strcat(TiffFolder,'/', InfoFile));
+    load(InfoFile);
        
     ylat = info.GUIcalFactors.y_umPerPix;
     zdep = info.GUIcalFactors.z_umPerPix;
@@ -46,8 +46,9 @@ function skew_correct_one(TiffFolder, SaveFolder, RunName, InfoFile)
     mkdir(SaveName);
     % timeStepName = strsplit(RunName, '_');
     % timeName = char(strcat(timeStepName(2), '_', timeStepName(3), '_', timeStepName(4)));
-    % imgToSave2=[SaveName, '/', timeName, '.tiff'];
-    imgToSave2=[SaveName, '/', RunName, '.tiff'];
+    % imgToSave2=[SaveName, '/', timeName, '.tif'];
+    [RunNamePath,RunNameFileName,RunNameext] = fileparts(RunName)
+    imgToSave2=[SaveName, '/', strcat(RunNameFileName,'_skewCorrected'), '.tif'];
     imwrite(uint16(temp(:, :, 1)), imgToSave2, 'tif', 'Compression', 'none');                
     for j = 2:size(temp, 3)
         imwrite(uint16(temp(:, :, j)), imgToSave2, 'tif', 'Compression', 'none', 'WriteMode', 'Append');

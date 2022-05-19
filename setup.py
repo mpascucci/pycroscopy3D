@@ -2,7 +2,7 @@ import setuptools
 
 VERSION_MAJOR = 0
 VERSION_MINOR = 1
-VERSION_MICRO = 2
+VERSION_MICRO = 3
 
 with open("README.txt", "r") as fh:
     long_description = fh.read()
@@ -24,7 +24,9 @@ setuptools.setup(name='Pycroscopy3D',
                      'pycro_unpad=pycroscopy3D.cli.unpad:main',
                      'pycro_sum_stacks=pycroscopy3D.cli.sum_stacks:main',
                      'pycro_deconvolve=pycroscopy3D.cli.deconvolution:main',
-                     'pycro_convert=pycroscopy3D.cli.ants_to_tif:main']
+                     'pycro_convert=pycroscopy3D.cli.ants_to_tif:main',
+                     'pycro_skew_correct_one=pycroscopy3D.cli.skew_correct_one:main',
+                     'pycro_skew_correct_many=pycroscopy3D.cli.skew_correct_many:main']
                      },
                  classifiers=[
                      "Programming Language :: Python",
