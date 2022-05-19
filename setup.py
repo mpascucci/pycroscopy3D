@@ -17,6 +17,7 @@ setuptools.setup(name='Pycroscopy3D',
                  author_email='marpas.paris@gmail.com',
                  url='https://github.com/mpascucci/pycroscopy',
                  packages=setuptools.find_packages(),
+                 package_data={'': ['Matlab/*']},
                  include_package_data=True,
                  install_requires=['numpy', 'matplotlib', 'tqdm', 'connected-components-3d', 'antspyx', 'multipagetiff'],
                  entry_points={'console_scripts': [
