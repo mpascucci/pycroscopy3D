@@ -24,6 +24,8 @@ def main(*args, **kwargs):
     parser.add_argument('-u', "--unpad", help="Auto-unpad image", type=bool, default=False)
     parser.add_argument('-i', "--max_iterations", help="Maximum iteration number (default 10)", type=int, default=2)
     parser.add_argument('-o', "--output_folder", help="The folder where the output file will be saved", type=str, required=True)
+    parser.add_argument('-q', "--quiet", help="Reduce verbosity", type=bool, default=False)
+
     args = parser.parse_args()
 
     if not args.quiet:
