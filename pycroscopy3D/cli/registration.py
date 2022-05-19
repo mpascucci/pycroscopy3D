@@ -24,11 +24,13 @@ def main(*args, **kwargs):
     parser.add_argument('-q', "--quiet", help="Reduce verbosity", type=bool, default=False)
 
     args = parser.parse_args()
+    ANTs_verbose = False
 
     if not args.quiet:
         # change verbosity
         mtif.stack.log.setLevel(logging.INFO)
         log.setLevel(logging.INFO)
+        ANTs_verbose = True
 
     log.info(f"Starting registration of: {args.input_path}")
     log.info(f"Working directory: {os.getcwd()}")
@@ -43,9 +45,10 @@ def main(*args, **kwargs):
     else:
         mask = None
 
-    registered = register_with_ANTs(to_register=to_register, template=template, mask=mask)
+    registered = register_with_ANTs(to_register=to_register, template=template, mask=mask, verbose=ANTs_verbose,  type_of_transform=args.regitration_type)
     reg_stack = mtif.Stack(registered)
     reg_stack.dtype_out = numpy.dtype(args.dtype)
     
     out_path = os.path.join(args.output_folder, os.path.basename(args.input_path))
     mtif.write_stack(reg_stack, out_path)
+    log.info(f"Registration done, stack saved as {out_path}")
