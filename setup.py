@@ -23,7 +23,8 @@ setuptools.setup(name='Pycroscopy3D',
                      'pycro_register=pycroscopy3D.cli.registration:main',
                      'pycro_unpad=pycroscopy3D.cli.unpad:main',
                      'pycro_sum_stacks=pycroscopy3D.cli.sum_stacks:main',
-                     'pycro_deconvolve=pycroscopy3D.cli.deconvolution:main']
+                     'pycro_deconvolve=pycroscopy3D.cli.deconvolution:main',
+                     'pycro_convert=pycroscopy3D.cli.ants_to_tif:main']
                      },
                  classifiers=[
                      "Programming Language :: Python",
