@@ -7,7 +7,6 @@ from matplotlib.colors import LinearSegmentedColormap
 from scipy import ndimage
 from tqdm import tqdm
 import logging
-from dataclasses import dataclass
 
 log = logging.getLogger(__name__)
 
