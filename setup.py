@@ -27,7 +27,8 @@ setuptools.setup(name='Pycroscopy3D',
                      'pycro_deconvolve=pycroscopy3D.cli.deconvolution:main',
                      'pycro_convert=pycroscopy3D.cli.ants_to_tif:main',
                      'pycro_skew_correct_one=pycroscopy3D.cli.skew_correct_one:main',
-                     'pycro_skew_correct_many=pycroscopy3D.cli.skew_correct_many:main']
+                     'pycro_skew_correct_many=pycroscopy3D.cli.skew_correct_many:main',
+                     'pycro_psf=pycroscopy3D.cli.psf_mean:main']
                      },
                  classifiers=[
                      "Programming Language :: Python",
