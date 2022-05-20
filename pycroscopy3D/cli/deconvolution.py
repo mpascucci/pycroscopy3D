@@ -5,10 +5,6 @@ import os
 from . import utils
 import numpy as np
 
-logging.basicConfig(level=logging.DEBUG)
-log = logging.getLogger(__name__)
-log.setLevel(logging.WARNING)
-
 from ..deconvolution import deconvolve
 
 # =========================================
@@ -31,11 +27,10 @@ def main(*args, **kwargs):
     if not args.quiet:
         # change verbosity
         mtif.stack.log.setLevel(logging.INFO)
-        log.setLevel(logging.INFO)
 
-    log.info(f"Starting deconvolution of: {args.input_path}")
+    print(f"Starting deconvolution of: {args.input_path}")
 
-    utils.create_folders(args.output_folder, log)
+    utils.create_folders(args.output_folder)
 
     psf = mtif.read_stack(args.psf_path)
     img = mtif.read_stack(args.input_path)
@@ -48,3 +43,5 @@ def main(*args, **kwargs):
   
     out_path = os.path.join(args.output_folder, os.path.basename(args.input_path))
     mtif.write_stack(deconvolved, out_path)
+
+    print("done.")

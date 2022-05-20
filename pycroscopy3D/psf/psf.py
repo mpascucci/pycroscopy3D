@@ -1,3 +1,4 @@
+from typing import List
 import multipagetiff as mtif
 import numpy as np
 from matplotlib import pyplot as plt
@@ -6,6 +7,7 @@ from matplotlib.colors import LinearSegmentedColormap
 from scipy import ndimage
 from tqdm import tqdm
 import logging
+from dataclasses import dataclass
 
 log = logging.getLogger(__name__)
 
@@ -34,7 +36,7 @@ class PSF:
                 if 'auto' the size is estimated as the average of the detected objects.
             size_tolerance (float) : relative size tolerance in PSF selection (see exp_size).
                 The value must be within 0 (min tolerance) and 1 (max tolerance).
-                A value of 0 means to reject all objects which size si not identical to exp_size
+                A value of 0 means to reject all objects which size is not identical to exp_size
                 Ignored if exp_size is None
 
         Returns:
@@ -84,7 +86,7 @@ class PSF:
         self.bbox_size = get_largest_bbox(bboxes_filt)
 
     def __repr__(self):
-        return f"PSF generator: found {self.total_found_objects} objects, {self.total_found_objects - len(self.labels)} rejected (wrong size)."
+        return f"PSF generator: found {self.total_found_objects} objects, {self.total_found_objects - self.number_of_valid_psfs} rejected (because of size tolerance)."
 
     def calc_mean_psf(self):
         """Calculate the average PSF"""
@@ -114,6 +116,10 @@ class PSF:
         if self._PSFs is None:
             self.calc_mean_psf()
         return self._PSFs
+
+    @property
+    def number_of_valid_psfs(self):
+        return len(self.labels)
 
     def get_one_cropped_psf(self, index):
         slice = self.slices[index]
@@ -225,7 +231,7 @@ def calc_av_bbox_size(bboxes):
     return np.round(sum_bbox/len(bboxes)).astype(int)
 
 
-def get_largest_bbox(bboxes, scale=1.5):
+def get_largest_bbox(bboxes, scale=1.5) -> int:
     largest_bbox = np.zeros(3)
     for s in bboxes:
         largest_bbox = np.maximum(largest_bbox, np.array(
@@ -250,63 +256,73 @@ def crop_PSFs(stack, centroids, bbox_size):
     return PSFs
 
 
-def average_psf(stack_path: str, gblur_std=1, th_min=0.2, value_tolerance=0, exp_size='auto', size_tolerance=0.8):
-    """Generate a mean psf image from a volumetric image of many point-size objects.
+# @dataclass
+# class PSF_data:
+#     """Result object of average PSF calculation"""
+#     stack : mtif.Stack
+#     gblur : float
+#     thresh: float
+#     cc : int
+#     bbox_size : int
+#     labels : List[int]
 
-    Args:
-        stack_path (str): path to a 3D tiff stack (beads image)
-        gblur_std (int, optional): gaussian blur std Defaults to 1.
-        th_min (float, optional): relative threshold in [0,1] Defaults to 0.2.
-        value_tolerance (int, optional): when cropping, consider voxels as neighbors
-            if their value difference is smaller than this parameter
-        exp_size (array of 3 int) : expected psf size (z,x,y). A detected objects is discarded if 
-            its bounding box size is bigger or smaller than the expected size by a factor specified in
-            size_tolerance. If None, the objects are not filtered.
-            if 'auto' the size is estimated as the average of the detected objects.
-        size_tolerance (float) : relative size tolerance in PSF selection (see exp_size).
-            The value must be within 0 (min tolerance) and 1 (max tolerance).
-            A value of 0 means to reject all objects which size si not identical to exp_size
-            Ignored if exp_size is None
+# def average_psf(stack_path: str, gblur_std=1, th_min=0.2, value_tolerance=0, exp_size='auto', size_tolerance=0.8):
+#     """Generate a mean psf image from a volumetric image of many point-size objects.
 
-    Returns:
-        Stack: a multipagetiff Stack containing the average PSF
-    """
-    # Generate a mean psf image from a volumetric image of beads
+#     Args:
+#         stack_path (str): path to a 3D tiff stack (beads image)
+#         gblur_std (int, optional): gaussian blur std Defaults to 1.
+#         th_min (float, optional): relative threshold in [0,1] Defaults to 0.2.
+#         value_tolerance (int, optional): when cropping, consider voxels as neighbors
+#             if their value difference is smaller than this parameter
+#         exp_size (array of 3 int) : expected psf size (z,x,y). A detected objects is discarded if
+#             its bounding box size is bigger or smaller than the expected size by a factor specified in
+#             size_tolerance. If None, the objects are not filtered.
+#             if 'auto' the size is estimated as the average of the detected objects.
+#         size_tolerance (float) : relative size tolerance in PSF selection (see exp_size).
+#             The value must be within 0 (min tolerance) and 1 (max tolerance).
+#             A value of 0 means to reject all objects which size si not identical to exp_size
+#             Ignored if exp_size is None
 
-    stack = mtif.read_stack(stack_path)
+#     Returns:
+#         Stack: a multipagetiff Stack containing the average PSF
+#     """
+#     # Generate a mean psf image from a volumetric image of beads
 
-    # Gaussian Blur =============================
-    log.info("Gaussian blur")
-    gblur = gaussian_blur(stack, gblur_std)
+#     stack = mtif.read_stack(stack_path)
 
-    # Threshold =================================
-    log.info("Threshold")
-    if value_tolerance == 0:
-        thresh = threshold(gblur, th_min, binary=True)
-    else:
-        value_tolerance = abs(value_tolerance)  # positive value expected
-        thresh = threshold(gblur, th_min, binary=False)
+#     # Gaussian Blur =============================
+#     log.info("Gaussian blur")
+#     gblur = gaussian_blur(stack, gblur_std)
 
-    # Connected Components =================================
-    log.info("Connected Components")
-    cc = cc3d.connected_components(
-        thresh, connectivity=26, delta=value_tolerance)
+#     # Threshold =================================
+#     log.info("Threshold")
+#     if value_tolerance == 0:
+#         thresh = threshold(gblur, th_min, binary=True)
+#     else:
+#         value_tolerance = abs(value_tolerance)  # positive value expected
+#         thresh = threshold(gblur, th_min, binary=False)
 
-    n_labels = cc.max()
-    log.info(f"Detected components:{n_labels}")
+#     # Connected Components =================================
+#     log.info("Connected Components")
+#     cc = cc3d.connected_components(
+#         thresh, connectivity=26, delta=value_tolerance)
 
-    # Bounding box =============================
-    log.info("Bounding box")
-    bboxes = ndimage.find_objects(cc)
+#     n_labels = cc.max()
+#     log.info(f"Detected components:{n_labels}")
 
-    if exp_size == 'auto':
-        exp_size = calc_av_bbox_size(bboxes)
+#     # Bounding box =============================
+#     log.info("Bounding box")
+#     bboxes = ndimage.find_objects(cc)
 
-    bboxes_filt, labels = filter_bboxes(bboxes, exp_size, size_tolerance)
+#     if exp_size == 'auto':
+#         exp_size = calc_av_bbox_size(bboxes)
 
-    log.info(
-        f"found {len(bboxes)} objects, {len(labels)} rejected (wrong size).")
+#     bboxes_filt, labels = filter_bboxes(bboxes, exp_size, size_tolerance)
 
-    bbox_size = get_largest_bbox(bboxes_filt)
+#     log.info(
+#         f"found {len(bboxes)} objects, {len(labels)} rejected (wrong size).")
 
-    return PSF_data(stack, gblur, thresh, cc, bbox_size, labels)
+#     bbox_size = get_largest_bbox(bboxes_filt)
+
+#     return PSF_data(stack, gblur, thresh, cc, bbox_size, labels)

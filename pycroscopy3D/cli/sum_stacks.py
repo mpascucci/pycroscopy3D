@@ -2,13 +2,8 @@ import multipagetiff as mtif
 import argparse
 import logging
 import os
-
 import numpy as np
 from . import utils
-
-logging.basicConfig(level=logging.DEBUG)
-log = logging.getLogger(__name__)
-log.setLevel(logging.WARNING)
 
 def main(*args, **kwargs):
     parser = argparse.ArgumentParser(description="Calculate the mean of a set stacks.")
@@ -23,15 +18,13 @@ def main(*args, **kwargs):
     if not args.quiet:
         # change verbosity
         mtif.stack.log.setLevel(logging.INFO)
-        log.setLevel(logging.INFO)
 
-    log.info(f"Start sum calculation on {len(args.stack_paths)} files.")
-    log.info(f"divisor: {args.divisor}")
+    print(f"Start sum calculation on {len(args.stack_paths)} files.")
 
     out_dir = os.path.dirname(args.output_path)
 
     # create output dir
-    utils.create_folders(out_dir, log)
+    utils.create_folders(out_dir)
     
     # create an empty stack to hold the mean
     s = np.empty_like(mtif.read_stack(args.stack_paths[0]).pages, dtype=float)
@@ -44,10 +37,9 @@ def main(*args, **kwargs):
     # (useful for mean calculation)
     s /= args.divisor
 
-    log.info("sum done.")
-    log.info(f"mean {s.mean()}, min {s.min()}, max {s.max()}")
-
     # write the sum
     s = mtif.Stack(s)    
     s.dtype_out = args.dtype
     mtif.write_stack(s, args.output_path)
+
+    print("done.")

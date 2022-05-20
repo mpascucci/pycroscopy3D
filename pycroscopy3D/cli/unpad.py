@@ -2,14 +2,7 @@ import multipagetiff as mtif
 import argparse
 import logging
 import os
-
-import numpy
 from . import utils
-
-
-log = logging.getLogger(__name__)
-
-from ..registration import register_with_ANTs
   
 def main(*args, **kwargs):
     parser = argparse.ArgumentParser(description="Unpad one stack by removing zero-valued lines and columns from every page.")
@@ -19,10 +12,12 @@ def main(*args, **kwargs):
 
     args = parser.parse_args()
 
-    utils.create_folders(args.output_folder, log)
+    utils.create_folders(args.output_folder)
     
     if not args.quiet:
         mtif.log.setLevel(logging.INFO)
+
+    print('unpadding')
 
     stack = mtif.read_stack(args.input_path)
 
@@ -30,3 +25,5 @@ def main(*args, **kwargs):
 
     out_path = os.path.join(args.output_folder, os.path.basename(args.input_path))
     mtif.write_stack(stack, out_path)
+
+    print('done')

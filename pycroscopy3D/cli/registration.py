@@ -6,9 +6,6 @@ import os
 import numpy
 from . import utils
 
-logging.basicConfig(level=logging.DEBUG)
-log = logging.getLogger(__name__)
-log.setLevel(logging.WARNING)
 
 from ..registration import register_with_ANTs
   
@@ -29,13 +26,12 @@ def main(*args, **kwargs):
     if not args.quiet:
         # change verbosity
         mtif.stack.log.setLevel(logging.INFO)
-        log.setLevel(logging.INFO)
         ANTs_verbose = True
 
-    log.info(f"Starting registration of: {args.input_path}")
-    log.info(f"Working directory: {os.getcwd()}")
+    print(f"Starting registration of: {args.input_path}")
+    # log.info(f"Working directory: {os.getcwd()}")
 
-    utils.create_folders(args.output_folder, log)
+    utils.create_folders(args.output_folder)
 
     template = mtif.read_stack(args.template_path).pages
     to_register = mtif.read_stack(args.input_path).pages
@@ -51,4 +47,4 @@ def main(*args, **kwargs):
     
     out_path = os.path.join(args.output_folder, os.path.basename(args.input_path))
     mtif.write_stack(reg_stack, out_path)
-    log.info(f"Registration done, stack saved as {out_path}")
+    print(f"Registration done, stack saved as {out_path}")
