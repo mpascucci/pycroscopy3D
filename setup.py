@@ -2,7 +2,7 @@ import setuptools
 
 VERSION_MAJOR = 0
 VERSION_MINOR = 1
-VERSION_MICRO = 3
+VERSION_MICRO = 4
 
 with open("README.txt", "r") as fh:
     long_description = fh.read()
