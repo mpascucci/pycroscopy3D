@@ -1,1 +1,1 @@
-Pycroscopy is a collection of tools for miscroscopy, written in python
+Pycroscopy3D is a collection of tools for miscroscopy, written in python

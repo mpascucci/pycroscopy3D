@@ -1,21 +1,19 @@
-# Pycroscopy
+# Pycroscopy3D
 ---
 
-Pycroscopy is a collection of tools for microscopy.
+Pycroscopy3D is a collection of tools for microscopy.
 
 ### Features
-- Uses [multipagetiff](https://github.com/mpascucci/multipagetiff) for easy 3D stack manipulation
-- Includes an **average PSF** measurement from a volumetric image of point-like objects
-
-### upcoming features
-- stacks <--> 4D hyperstack
-- 3D deconvolution
+- Easy 3D-stack manipulation with [multipagetiff](https://github.com/mpascucci/multipagetiff)
+- Straightforward extraction of **average PSF** from a volumetric image of point-like objects
+- 3D deconvolution (using (iocbio/deconvolve)[https://gitlab.com/iocbio/deconvolve])
+- Stack registration (using (ANTsPy)[https://github.com/ANTsX/ANTsPy])
 
 ## Example use
 
 
 ```python
-import pycroscopy as pycro
+import pycroscopy3D as pycro
 ```
 
 
