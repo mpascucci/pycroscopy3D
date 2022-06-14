@@ -6,8 +6,8 @@ Pycroscopy3D is a collection of tools for microscopy.
 ### Features
 - Easy 3D-stack manipulation with [multipagetiff](https://github.com/mpascucci/multipagetiff)
 - Straightforward extraction of **average PSF** from a volumetric image of point-like objects
-- 3D deconvolution (using (iocbio/deconvolve)[https://gitlab.com/iocbio/deconvolve])
-- Stack registration (using (ANTsPy)[https://github.com/ANTsX/ANTsPy])
+- 3D deconvolution (using [iocbio/deconvolve](https://gitlab.com/iocbio/deconvolve)
+- Stack registration (using [ANTsPy](https://github.com/ANTsX/ANTsPy))
 
 ## Example use
 
