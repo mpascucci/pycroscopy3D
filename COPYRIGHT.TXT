@@ -22,4 +22,3 @@ library by Martin Laasmaa <martin@sysbio.ioc.ee> and Marko Vendelin
 <markov@sysbio.ioc.ee>, distributed under GPL3 licence.
 The source code is stored in `Pycroscopy3D/deconvolution`.
 The source code has not been modified.
-One file has been added (deconvolve/cpp/CMakeLists.txt).

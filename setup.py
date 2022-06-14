@@ -2,10 +2,12 @@
 from setuptools import Extension, setup, find_packages
 from Cython.Build import cythonize
 import numpy
+from glob import glob
+
 
 VERSION_MAJOR = 0
 VERSION_MINOR = 1
-VERSION_MICRO = 5
+VERSION_MICRO = 6
 
 with open("README.txt", "r") as fh:
     long_description = fh.read()
@@ -14,27 +16,18 @@ with open("README.txt", "r") as fh:
 iocbio_deconvolve = [
     Extension("iocbio_deconvolve",
               language="c++",
-              # the cython interface to the cpp lib
               sources=[
-                  "./deconvolve/python/calc/cpp_calc.pyx"],
-              # the cpp library to compile (containing the CMakeLists.txt file)
-              library_dirs=["./deconvolve/cpp"],
+                  "deconvolve/python/calc/cpp_calc.pyx",
+                  *glob("deconvolve/cpp/src/*.cpp")],
               # include directories needed to compile the lib
               include_dirs=[
-                  numpy.get_include(), "./deconvolve/cpp/include"],
+                  numpy.get_include(), "deconvolve/cpp/include"],
               # the shared librairies linked at import time
-              libraries=['pthread',
-                         'fftw3', 'fftw3f'],
+              libraries=['pthread', 'fftw3', 'fftw3f'],
               extra_compile_args=[
-                  "-std=c++11", "-funroll-loops"],
-              # The statically compiled library to include in the module
-              extra_objects=[
-                  "./deconvolve/cpp/build/libiocbio_deconvolve.a"]
+                  "-std=c++11", "-funroll-loops", "-Ofast", "-march=native", "-fPIC"],
               )
 ]
-
-# setup(name="iocbio_deconvolve",
-#       ext_modules=cythonize(ext_modules_use_static_lib))
 
 setup(name='Pycroscopy3D',
       version='{}.{}.{}'.format(
@@ -47,9 +40,9 @@ setup(name='Pycroscopy3D',
       url='https://github.com/mpascucci/pycroscopy',
       ext_modules=cythonize(iocbio_deconvolve),
       packages=find_packages(),
-      package_data={'': ['Matlab/*']},
+      package_data={'': ['pycroscopy3D/Matlab/*']},
       include_package_data=True,
-      install_requires=['numpy', 'matplotlib', 'tqdm',
+      install_requires=['numpy', 'matplotlib', 'tqdm', 'psutil',
                         'connected-components-3d', 'antspyx', 'multipagetiff'],
       entry_points={'console_scripts': [
           'pycro_register=pycroscopy3D.cli.registration:main',
@@ -63,7 +56,7 @@ setup(name='Pycroscopy3D',
       },
       classifiers=[
           "Programming Language :: Python",
-          "License :: OSI Approved :: GNU General Public License v2 (GPLv2)",
+          "License :: OSI Approved :: GNU General Public License v2 (GPLv3)",
           "Operating System :: OS Independent",
       ]
       )
