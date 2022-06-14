@@ -1,0 +1,108 @@
+#!/usr/bin/env python3
+
+import os
+from thirdparty.pyevtk.hl import imageToVTK
+import numpy as np
+
+from python.calc.psf import extract_psf, axial_resolution, lateral_resolution, save2hdf5, psf_fig
+
+
+def main(args):
+
+    em_w = None
+    ex_w = None
+    NA = None
+    refractive_index = None
+    theoretical_resolutions = None
+    out_path = args.out_file
+
+    # determine input data type
+    if os.path.isfile(os.path.join(args.in_file, 'Index.ref.xml')):
+        if args.phenix_field is None or args.phenix_channel is None:
+            print('For Phenix data field and channel number have to be provided')
+            raise ValueError('For Phenix data field and channel number have to be provided')
+
+        # loading data
+        from python.io.read_phenix import PhenixData
+        print('\nLoading Phenix data:')
+        m = PhenixData(args.in_file)
+        stack, spacings, info = m.get_stack(args.phenix_field, args.phenix_channel, args.phenix_well)
+        em_w = float(info['MainEmissionWavelength'])*1e-9
+        ex_w = float(info['MainExcitationWavelength'])*1e-9
+        NA = float(info['ObjectiveNA'])
+        refractive_index = 1.5
+        print()
+
+    elif os.path.isfile(args.in_file) and args.in_file.endswith('.h5'):
+        from python.io.read_sysbio import SysBioData
+        print('\nLoading Sysbio microscope data:')
+        m = SysBioData(args.in_file)
+        stack, spacings, info = m.get_stack('sum')
+        em_w = float(info['MainEmissionWavelength'])*1e-9
+        ex_w = float(info['MainExcitationWavelength'])*1e-9
+        NA = float(info['ObjectiveNA'])
+        refractive_index = 1.338
+        print()
+    else:
+        raise NotImplementedError('Not supported file type')
+
+    # creating output paths
+    os.makedirs(out_path, exist_ok=True)
+
+    if args.save_intermediate:
+        os.makedirs(os.path.join(out_path, 'vtk'), exist_ok=True)
+        os.makedirs(os.path.join(out_path, 'pdfs'), exist_ok=True)
+        # os.makedirs(os.path.join(out_path, 'images'), exist_ok=True)
+
+    if None not in [em_w, ex_w, NA, refractive_index]:
+        # calculating theoretical resolutions axial and lateral
+        theoretical_resolutions = {'axial': axial_resolution('confocal', em_w, ex_w, NA, refractive_index),
+                                   'lateral': lateral_resolution('confocal', em_w, ex_w, NA)}
+
+    if args.test_asymetry:
+        raise NotImplemented('NotImplemented')
+        average, asymetry_dict = extract_psf(stack, spacings, theoretical_resolutions,
+                                             save=(out_path if args.save_intermediate else False),
+                                             wsize_range=[4000, 12500],
+                                             accept_as_possible_area=0.05,
+                                             test_asymetry=True)
+        from python.tests.plot_vector_field import plot_vector_field
+        plot_vector_field(asymetry_dict, 10, xlims=[0,2160], ylims=[0,2160]) # TODO save image as well, use stack shape for lims
+
+    else:
+        average, nspacings = extract_psf(stack, spacings, theoretical_resolutions,
+                                         save=(out_path if args.save_intermediate else False))
+
+    average /= average.sum()
+    save2hdf5(average, os.path.join(out_path, 'average-psf'), 'psf', nspacings, source_file=args.in_file)
+
+    if args.save_intermediate:
+        imageToVTK(os.path.join(out_path, 'vtk', 'average'),
+                   spacing=[nspacings['Z'], nspacings['Y'], nspacings['X']],
+                   pointData={'psf': np.ascontiguousarray(average/average.max()*255)})
+
+        pdf_path = os.path.join(out_path, 'pdfs')
+        psf_fig(average, os.path.join(pdf_path, 'average'), nspacings, theoretical_resolutions)
+        if os.path.isfile('%s/all.pdf' % pdf_path):
+            os.remove('%s/all.pdf' % pdf_path)
+        os.system('stapler cat %s/*.pdf %s/all.pdf' % (pdf_path, pdf_path))
+
+
+if __name__ == '__main__':
+    import argparse, sys
+
+    parser = argparse.ArgumentParser(description='Calculates average PSF from microscope images')
+    parser.add_argument('in_file', type=str, help='Input file of imaged fluorescence beads')
+    parser.add_argument('out_file', type=str, help='Output file path where average psf will be saved')
+    parser.add_argument('-s', '--save-intermediate', action='store_true', help='Saves intermediate results. If option given intermediate results will be saved in sub-folders of output path.')
+    parser.add_argument('-pw', '--phenix-well', type=str, default=None, help='If data is PhenixData then well id must be provided')
+    parser.add_argument('-pf', '--phenix-field', type=int, default=None, help='If data is PhenixData then field number must be provided')
+    parser.add_argument('-pc', '--phenix-channel', type=int, default=None, help='If data is PhenixData then channel number must be provided')
+    parser.add_argument('-tasym', '--test-asymetry', action='store_true', help='TODO')
+    args = parser.parse_args()
+
+    if args.in_file == '' or args.out_file == '':
+        parser.print_help()
+        sys.exit()
+    else:
+        main(args)

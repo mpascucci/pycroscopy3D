@@ -1,0 +1,22 @@
+var searchData=
+[
+  ['callback_5fcpp_5ftype_1',['callback_cpp_type',['../namespacedeconvolve.html#a651bedf17c041d67a0125de6275bc5c1',1,'deconvolve']]],
+  ['callback_5fdefault_2',['callback_default',['../classdeconvolve_1_1DeconvolvePrivate.html#ad47a03b92610f8d3f907f88bd39cd64d',1,'deconvolve::DeconvolvePrivate']]],
+  ['callback_5fextended_5ftype_3',['callback_extended_type',['../namespacedeconvolve.html#aa9ff52654810ed9c2b4195bc63351d05',1,'deconvolve']]],
+  ['callback_5ftype_4',['callback_type',['../namespacedeconvolve.html#ac2deaea008754b189d8406f63394bce9',1,'deconvolve']]],
+  ['clear_5',['clear',['../classdeconvolve_1_1FFTWPlan.html#a83d0321ccdb75f368cc3fc60e06ffe0e',1,'deconvolve::FFTWPlan::clear()'],['../structdeconvolve_1_1fftw__implementation__detail_3_01double_01_4.html#a986ee2b654fb1b6ec187b27a9cab11dd',1,'deconvolve::fftw_implementation_detail&lt; double &gt;::clear()'],['../structdeconvolve_1_1fftw__implementation__detail_3_01float_01_4.html#aafd879e14f363b599dd1c9a478b4e203',1,'deconvolve::fftw_implementation_detail&lt; float &gt;::clear()']]],
+  ['clear_5fcallback_6',['clear_callback',['../classdeconvolve_1_1Deconvolve.html#ae219313d0fa2d5dfb4b01cbd45d2417a',1,'deconvolve::Deconvolve::clear_callback()'],['../classdeconvolve_1_1DeconvolvePrivate.html#a5d4b2f8a11dedea76d7826c83a33c950',1,'deconvolve::DeconvolvePrivate::clear_callback()']]],
+  ['clear_5ffftw_5fhandlers_7',['clear_fftw_handlers',['../classdeconvolve_1_1Deconvolve.html#a88613eb83ecfe68bfaf72f055287966f',1,'deconvolve::Deconvolve::clear_fftw_handlers()'],['../classdeconvolve_1_1DeconvolvePrivate.html#ab7c8c86341ed7944c763b6274801dca8',1,'deconvolve::DeconvolvePrivate::clear_fftw_handlers()']]],
+  ['clear_5ffunction_8',['clear_function',['../structdeconvolve_1_1fftw__implementation_3_01double_01_4.html#a748a5e1d67e0d3b58006e5dba217c56f',1,'deconvolve::fftw_implementation&lt; double &gt;::clear_function()'],['../structdeconvolve_1_1fftw__implementation_3_01float_01_4.html#af3d85601872e3af17324d4834fe909a1',1,'deconvolve::fftw_implementation&lt; float &gt;::clear_function()']]],
+  ['clear_5fmax_5fiterations_9',['clear_max_iterations',['../classdeconvolve_1_1Deconvolve.html#a5d75d2d868578f8df9dd199944cfb247',1,'deconvolve::Deconvolve::clear_max_iterations()'],['../classdeconvolve_1_1DeconvolvePrivate.html#ab33ae453845143409e08ec488478083b',1,'deconvolve::DeconvolvePrivate::clear_max_iterations()']]],
+  ['clear_5fsnr_10',['clear_snr',['../classdeconvolve_1_1Deconvolve.html#acc31ff9d9ffe771bfb7eb44c67ed718a',1,'deconvolve::Deconvolve::clear_snr()'],['../classdeconvolve_1_1DeconvolvePrivate.html#a47e6ba07b49f02bd1a59b4a8e2ee9340',1,'deconvolve::DeconvolvePrivate::clear_snr()']]],
+  ['compatible_11',['compatible',['../classdeconvolve_1_1Image.html#aa7f9edebff0db3e2b02e526b4e9d4700',1,'deconvolve::Image']]],
+  ['complex_5ftype_12',['complex_type',['../structdeconvolve_1_1fftw__implementation_3_01double_01_4.html#ae07f4201a5c442321738cabb9355234d',1,'deconvolve::fftw_implementation&lt; double &gt;::complex_type()'],['../structdeconvolve_1_1fftw__implementation_3_01float_01_4.html#aa334db3375d4ff545968578fe3a19128',1,'deconvolve::fftw_implementation&lt; float &gt;::complex_type()']]],
+  ['const_5flambda_5fstack_5fsize_13',['const_lambda_stack_size',['../classdeconvolve_1_1DeconvolvePrivate.html#ae21b5fa4f6b120948457835455f42470',1,'deconvolve::DeconvolvePrivate']]],
+  ['const_5fmax_5fiterations_14',['const_max_iterations',['../classdeconvolve_1_1DeconvolvePrivate.html#a4f5fbd9fdc36a84ae84496aaa33db391',1,'deconvolve::DeconvolvePrivate']]],
+  ['constants_2ehpp_15',['constants.hpp',['../constants_8hpp.html',1,'']]],
+  ['convolve_16',['convolve',['../classdeconvolve_1_1Deconvolve.html#a1499bfdbe3d4d454cfa85aec8062b292',1,'deconvolve::Deconvolve::convolve()'],['../classdeconvolve_1_1DeconvolvePrivate.html#a96e2239d8fefa144662fce69d4364933',1,'deconvolve::DeconvolvePrivate::convolve()'],['../classdeconvolve_1_1Image.html#aea9f34e977c92dcefe1c7cea729ad834',1,'deconvolve::Image::convolve(const Image &amp;kernel)']]],
+  ['convolve_5fconj_17',['convolve_conj',['../classdeconvolve_1_1Image.html#a88c1b67b952099a7a1897484bcaaae81',1,'deconvolve::Image']]],
+  ['convolve_5fimplementation_18',['convolve_implementation',['../classdeconvolve_1_1Image.html#ac4aa2cc5173baa94983bd9f4dd65e9ae',1,'deconvolve::Image']]],
+  ['copy_5fdata_19',['copy_data',['../classdeconvolve_1_1Image.html#a99c6444954e813629c3b6e62caf03603',1,'deconvolve::Image']]]
+];

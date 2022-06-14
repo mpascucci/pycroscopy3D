@@ -1,0 +1,22 @@
+var searchData=
+[
+  ['m_5fcallback_225',['m_callback',['../classdeconvolve_1_1DeconvolvePrivate.html#aab7a20d7fefd1767af14abe1ec2dc90e',1,'deconvolve::DeconvolvePrivate']]],
+  ['m_5fdata_226',['m_data',['../classdeconvolve_1_1Image.html#ad0ae596c1572e8310fff76a4742f9ff5',1,'deconvolve::Image::m_data()'],['../classdeconvolve_1_1PSF.html#aac0a8970918aef9bd6cdc04e40b8e6b6',1,'deconvolve::PSF::m_data()']]],
+  ['m_5fdec_227',['m_dec',['../classdeconvolve_1_1Deconvolve.html#a68fe1d6849e550f8d7ab82a61b1bc74c',1,'deconvolve::Deconvolve']]],
+  ['m_5ffftw_5fclear_5fplan_228',['m_fftw_clear_plan',['../classdeconvolve_1_1ImageSettings.html#a349402a9593af6d59174909800140926',1,'deconvolve::ImageSettings']]],
+  ['m_5ffftw_5fforward_5fplan_229',['m_fftw_forward_plan',['../classdeconvolve_1_1ImageSettings.html#a6d32ee1a5d68dd18646ef5f4801c22bb',1,'deconvolve::ImageSettings']]],
+  ['m_5ffftw_5finverse_5fplan_230',['m_fftw_inverse_plan',['../classdeconvolve_1_1ImageSettings.html#a6139df8cdbdfb96b022b7e6cd3215a9b',1,'deconvolve::ImageSettings']]],
+  ['m_5fid_231',['m_id',['../classdeconvolve_1_1ImageSettings.html#a02f0cc14ec91a9877d877ccad8e6d0ab',1,'deconvolve::ImageSettings']]],
+  ['m_5flambda_5fevolution_232',['m_lambda_evolution',['../classdeconvolve_1_1DeconvolvePrivate.html#afe7394e707c6281c7df909018f2761ce',1,'deconvolve::DeconvolvePrivate']]],
+  ['m_5fmax_5fiterations_233',['m_max_iterations',['../classdeconvolve_1_1DeconvolvePrivate.html#abb57684e9272f5677897466022d8a6cb',1,'deconvolve::DeconvolvePrivate']]],
+  ['m_5fn_234',['m_n',['../classdeconvolve_1_1Image.html#ad9348fae5ce1b5a1997717f1c4c7f03a',1,'deconvolve::Image::m_n()'],['../classdeconvolve_1_1PSF.html#a66a287444723d16663fc1f9f3be2c9d0',1,'deconvolve::PSF::m_n()']]],
+  ['m_5fotf_235',['m_otf',['../classdeconvolve_1_1PSF.html#adeec55ca5e00e415e516be15ff31bdc0',1,'deconvolve::PSF']]],
+  ['m_5fplan_236',['m_plan',['../classdeconvolve_1_1FFTWPlan.html#afe98f848390f365706dc87ef0115a9f4',1,'deconvolve::FFTWPlan']]],
+  ['m_5fplan_5fforward_237',['m_plan_forward',['../classdeconvolve_1_1Image.html#a1b6d9c31e1732c6f53b9dae9f9ac9c5a',1,'deconvolve::Image']]],
+  ['m_5fplan_5finverse_238',['m_plan_inverse',['../classdeconvolve_1_1Image.html#a9661d0021b3ddf82087da732527c09ed',1,'deconvolve::Image']]],
+  ['m_5fpsf_239',['m_psf',['../classdeconvolve_1_1DeconvolvePrivate.html#a48a3b3475006941dfed20b0c995cf967',1,'deconvolve::DeconvolvePrivate']]],
+  ['m_5fregularize_240',['m_regularize',['../classdeconvolve_1_1DeconvolvePrivate.html#a47ab54892f981a778f587cd6465420e1',1,'deconvolve::DeconvolvePrivate']]],
+  ['m_5fsettings_241',['m_settings',['../classdeconvolve_1_1DeconvolvePrivate.html#ad24d43bc8b2eafa5254737676f72237a',1,'deconvolve::DeconvolvePrivate::m_settings()'],['../classdeconvolve_1_1FFTWPlan.html#a938d9f3a1fa092aadce10a52f25f576d',1,'deconvolve::FFTWPlan::m_settings()'],['../classdeconvolve_1_1Image.html#a3281fa4ff2a8875e7828f3d0ed9223a9',1,'deconvolve::Image::m_settings()']]],
+  ['m_5fsnr_242',['m_snr',['../classdeconvolve_1_1DeconvolvePrivate.html#a17c2f6cdff7e02b9716c855b9d4d6ed3',1,'deconvolve::DeconvolvePrivate']]],
+  ['m_5fvoxel_243',['m_voxel',['../classdeconvolve_1_1Image.html#ae143d90821eb4894fe51ca4656ef2f71',1,'deconvolve::Image::m_voxel()'],['../classdeconvolve_1_1PSF.html#a4c01d9be64b4917482922615ecb1b402',1,'deconvolve::PSF::m_voxel()']]]
+];

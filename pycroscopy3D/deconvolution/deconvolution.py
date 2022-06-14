@@ -5,7 +5,7 @@ import logging
 log = logging.getLogger(__name__)
 
 try:
-    import cpp_calc as iocbio     # IOCBIO deconvolve
+    import iocbio_deconvolve as iocbio     # IOCBIO deconvolve
 except ModuleNotFoundError as e:
     msg = f"{e.msg}\n\n" \
         "The iocbio deconvolve python wrapper was not found.\n"\
@@ -20,6 +20,7 @@ except ImportError as e:
         'e.g. export LD_LIBRARY_PATH=<deconvolve_path>/cpp'
     log.warn(ImportError(msg))
     raise
+
 
 def _preprocess_stack(stack, dtype='float32'):
     """Load 3D image as ndarray"""
