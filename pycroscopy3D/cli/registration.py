@@ -23,21 +23,27 @@ def main(*args, **kwargs):
     args = parser.parse_args()
     ANTs_verbose = False
 
+    input_path=os.path.abspath(args.input_path)
+    template_path=os.path.abspath(args.template_path)
+    output_folder=os.path.abspath(args.output_folder)
+    mask_path=os.path.abspath(args.mask_path)
+
+
     if not args.quiet:
         # change verbosity
         mtif.stack.log.setLevel(logging.INFO)
         ANTs_verbose = True
 
-    print(f"Starting registration of: {args.input_path}")
+    print(f"Starting registration of: {input_path}")
     # log.info(f"Working directory: {os.getcwd()}")
 
-    utils.create_folders(args.output_folder)
+    utils.create_folders(output_folder)
 
-    template = mtif.read_stack(args.template_path).pages
-    to_register = mtif.read_stack(args.input_path).pages
+    template = mtif.read_stack(template_path).pages
+    to_register = mtif.read_stack(input_path).pages
     
-    if args.mask_path is not None:
-        mask = mtif.read_stack(args.mask_path).pages
+    if mask_path is not None:
+        mask = mtif.read_stack(mask_path).pages
     else:
         mask = None
 
@@ -45,6 +51,6 @@ def main(*args, **kwargs):
     reg_stack = mtif.Stack(registered)
     reg_stack.dtype_out = numpy.dtype(args.dtype)
     
-    out_path = os.path.join(args.output_folder, os.path.basename(args.input_path))
+    out_path = os.path.join(output_folder, os.path.basename(input_path))
     mtif.write_stack(reg_stack, out_path)
     print(f"Registration done, stack saved as {out_path}")
