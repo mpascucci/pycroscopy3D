@@ -10,6 +10,5 @@ build/
 _pycroscopy/
 
 examples_local
-cpp/
 build/
 local_examples/*.ipynb
