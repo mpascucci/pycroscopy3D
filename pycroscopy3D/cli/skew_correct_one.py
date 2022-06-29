@@ -16,17 +16,21 @@ def main(*args, **kwargs):
 
     args = parser.parse_args()
 
+    input_path=os.path.abspath(args.input_path)
+    info_file_path=os.path.abspath(args.info_file_path)
+    output_folder=os.path.abspath(args.output_folder)
+
     if not args.quiet:
         # change verbosity
         mtif.stack.log.setLevel(logging.INFO)
 
-    input_path, input_fname = os.path.split(args.input_path)
+    input_path, input_fname = os.path.split(input_path)
 
     print(f"Starting skew-correction of: {input_fname}")
     # log.info(f"Working directory: {os.getcwd()}")
 
-    utils.create_folders(args.output_folder)
+    utils.create_folders(output_folder)
   
-    skew_correct_matlab_one(input_path, args.output_folder, input_fname, args.info_file_path)
+    skew_correct_matlab_one(input_path, output_folder, input_fname, info_file_path)
 
-    print(f"Skew correction done, corrected stack saved in {args.output_folder}")
+    print(f"Skew correction done, corrected stack saved in {output_folder}")
