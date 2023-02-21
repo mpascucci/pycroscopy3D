@@ -18,19 +18,23 @@ def main(*args, **kwargs):
     args = parser.parse_args()
     # ANTs_verbose = False
 
+    input_path=os.path.abspath(args.input_path)
+    output_folder=os.path.abspath(args.output_folder)
+
     if not args.quiet:
         # change verbosity
         mtif.stack.log.setLevel(logging.INFO)
         ANTs_verbose = True
 
-    print(f"Starting nii --> tif conversion of: {args.input_path}")
+    print(f"Starting nii --> tif conversion of: {input_path}")
 
-    utils.create_folders(args.output_folder)  
+
+    utils.create_folders(output_folder)  
    
-    stack = load_with_ants(args.input_path)
+    stack = load_with_ants(input_path)
     stack.dtype_out = args.dtype
     
-    out_path = os.path.join(args.output_folder, os.path.basename(args.input_path).split('.')[0] + ".tif")
+    out_path = os.path.join(output_folder, os.path.basename(input_path).split('.')[0] + ".tif")
     mtif.write_stack(stack, out_path)
     
     print(f"Conversion done, stack saved as {out_path}")

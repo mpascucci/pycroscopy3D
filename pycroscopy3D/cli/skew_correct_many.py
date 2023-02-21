@@ -15,17 +15,22 @@ def main(*args, **kwargs):
 
     args = parser.parse_args()
 
+    input_folder=os.path.abspath(args.input_folder)
+    output_folder=os.path.abspath(args.output_folder)
+    info_file_path=os.path.abspath(args.info_file_path)
+
+
     if not args.quiet:
         # change verbosity
         mtif.stack.log.setLevel(logging.INFO)
 
     nfiles = len(glob(args.input_folder+"/*.tif"))
 
-    print(f"Starting skew-correction {nfiles} files in folder: {args.input_folder}")
+    print(f"Starting skew-correction {nfiles} files in folder: {input_folder}")
     print(f"Working directory: {os.getcwd()}")
 
-    utils.create_folders(args.output_folder)
+    utils.create_folders(output_folder)
   
-    skew_correct_matlab(args.input_folder, args.output_folder, args.info_file_path)
+    skew_correct_matlab(input_folder, output_folder, info_file_path)
 
-    print(f"Skew correction done, corrected stacks saved in {args.output_folder}")
+    print(f"Skew correction done, corrected stacks saved in {output_folder}")

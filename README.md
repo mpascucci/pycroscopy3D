@@ -1,6 +1,8 @@
 # Pycroscopy3D
 ---
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7660286.svg)](https://doi.org/10.5281/zenodo.7660286)
+
 Pycroscopy3D is a collection of tools for microscopy.
 
 ### Features

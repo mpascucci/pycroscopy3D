@@ -24,16 +24,20 @@ def main(*args, **kwargs):
 
     args = parser.parse_args()
 
+    input_path=os.path.abspath(args.input_path)
+    psf_path=os.path.abspath(args.psf_path)
+    output_folder=os.path.abspath(args.output_folder)
+
     if not args.quiet:
         # change verbosity
         mtif.stack.log.setLevel(logging.INFO)
 
-    print(f"Starting deconvolution of: {args.input_path}")
+    print(f"Starting deconvolution of: {input_path}")
 
-    utils.create_folders(args.output_folder)
+    utils.create_folders(output_folder)
 
-    psf = mtif.read_stack(args.psf_path)
-    img = mtif.read_stack(args.input_path)
+    psf = mtif.read_stack(psf_path)
+    img = mtif.read_stack(input_path)
 
     if args.unpad:
         mtif.unpad_stack(img)
@@ -41,7 +45,7 @@ def main(*args, **kwargs):
     deconvolved = deconvolve(img_stack=img, psf_stack=psf, offset=args.offset, gain=args.gain, max_iter=args.max_iterations)
     deconvolved.dtype_out = np.dtype(args.dtype)
   
-    out_path = os.path.join(args.output_folder, os.path.basename(args.input_path))
+    out_path = os.path.join(output_folder, os.path.basename(input_path))
     mtif.write_stack(deconvolved, out_path)
 
     print("done.")
